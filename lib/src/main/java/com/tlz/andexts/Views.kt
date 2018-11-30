@@ -23,14 +23,17 @@ fun View.sp2px(sp: Int) = context.sp2px(sp)
 fun View.px2dp(px: Int) = context.px2dp(px)
 fun View.px2sp(px: Int) = context.px2sp(px)
 
-fun View.densityDpi() = context.densityDpi()
-fun View.density() = context.density()
+val View.densityDpi
+    get() = context.densityDpi
+val View.density
+    get() = context.density
 
 fun View.inflate(layoutId: Int, parent: ViewGroup?) = LayoutInflater.from(context).inflate(layoutId, parent, false)!!
 
 fun View.drawable(resId: Int) = context.drawableRes(resId)
 
-fun View.selectableItemBackgroundResId() = context.selectableItemBackgroundResId()
+val View.selectableItemBackgroundResId
+    get() = context.selectableItemBackgroundResId
 
 
 fun View.openSoftKeyboard(){
@@ -44,4 +47,5 @@ fun View.openSoftKeyboard(){
 fun View.closeSoftKeyboard() = (context.getSystemService(Context.INPUT_METHOD_SERVICE) as
         InputMethodManager).hideSoftInputFromWindow(windowToken, 0)
 
-fun Paint.textOffsetY() = Math.abs(fontMetrics.top + fontMetrics.bottom) / 2
+val Paint.textOffsetY: Float
+    get() = Math.abs(fontMetrics.top + fontMetrics.bottom) / 2

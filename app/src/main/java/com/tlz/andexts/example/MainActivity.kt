@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.tlz.andexts.dp2px
 import com.tlz.andexts.sp2px
 import com.tlz.andexts.span.spannableStringBuilder
+import com.tlz.andexts.windowStatusBarColor
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -24,5 +25,7 @@ class MainActivity : AppCompatActivity() {
             append("第二行文字第二段")
             fontSize(sp2px(20))
         }.create()
+
+        this.windowStatusBarColor = Color.BLUE
     }
 }

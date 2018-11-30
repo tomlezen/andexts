@@ -1,4 +1,5 @@
 @file:Suppress("NOTHING_TO_INLINE", "unused")
+
 package com.tlz.andexts
 
 import android.app.Activity
@@ -14,14 +15,26 @@ import android.view.WindowManager
  * Time: 13:54.
  */
 
-fun Activity.setWindowStatusBarColor(color: Int) {
-    try {
+var Activity.windowStatusBarColor: Int
+    get() = try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = color
+            window.statusBarColor
+        } else {
+            0
         }
-    } catch (e: Exception) { }
-}
+    } catch (e: Exception) {
+        0
+    }
+    set(value) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                window.statusBarColor = value
+            }
+        } catch (e: Exception) {
+        }
+    }
+
 
 fun Activity.transparentStatusBar() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -32,14 +45,14 @@ fun Activity.transparentStatusBar() {
     }
 }
 
-inline fun <reified T: Activity> Activity.startActivity(vararg params: Pair<String, Any>) {
+inline fun <reified T : Activity> Activity.startActivity(vararg params: Pair<String, Any>) {
     ComInternals.internalStartActivity(this, T::class.java, params)
 }
 
-inline fun <reified T: Activity> Activity.startActivityForResult(requestCode: Int, vararg params: Pair<String, Any>) {
+inline fun <reified T : Activity> Activity.startActivityForResult(requestCode: Int, vararg params: Pair<String, Any>) {
     ComInternals.internalStartActivityForResult(this, T::class.java, requestCode, params)
 }
 
-inline fun <reified T: Service> Activity.startService(vararg params: Pair<String, Any>) {
+inline fun <reified T : Service> Activity.startService(vararg params: Pair<String, Any>) {
     ComInternals.internalStartService(this, T::class.java, params)
 }

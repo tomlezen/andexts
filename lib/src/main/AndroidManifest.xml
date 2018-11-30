@@ -2,6 +2,8 @@
     package="com.tlz.andexts">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
     <application>
         <provider
             android:name="android.support.v4.content.FileProvider"

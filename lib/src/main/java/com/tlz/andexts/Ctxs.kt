@@ -24,40 +24,43 @@ import java.io.File
  * Time: 11:42.
  */
 
-fun Context.appName() = appName(packageName)
+val Context.appName
+    get() = appName(packageName)
 
 fun Context.appName(packageName: String) = packageManager.getPackageInfo(packageName, 0)?.applicationInfo?.loadLabel(packageManager).toString()
 
-fun Context.appIcon() = appIcon(packageName)
+val Context.appIcon
+    get() = appIcon(packageName)
 
 fun Context.appIcon(packageName: String) = packageManager.getPackageInfo(packageName, 0)?.applicationInfo?.loadIcon(packageManager)
 
-fun Context.versionName() = versionName(packageName)
+val Context.versionName
+    get() = versionName(packageName)
 
 fun Context.versionName(packageName: String) = packageManager.getPackageInfo(packageName, 0)?.versionName
 
-fun Context.versionCode() = versionCode(packageName)
+val Context.versionCode
+    get() = versionCode(packageName)
 
 fun Context.versionCode(packageName: String) = packageManager.getPackageInfo(packageName, 0)?.versionCode ?: 0
 
 fun Context.metaData(key: String) = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)?.metaData?.getString(key)
 
-@SuppressLint("MissingPermission", "HardwareIds")
-fun Context.imei(): String? {
-    return try {
+val Context.imei
+    @SuppressLint("MissingPermission")
+    get() = try {
         (getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).deviceId
     } catch (var3: Exception) {
         null
     }
-}
 
 fun Context.appExists(packageName: String) = packageManager.getLaunchIntentForPackage(packageName) != null
 
 fun Context.activityExists(packageName: String, activityName: String) =
-        Intent().let {
-            it.setClassName(packageName, activityName)
-            packageManager.resolveActivity(it, 0) != null || it.resolveActivity(packageManager) != null || packageManager.queryIntentActivities(it, 0).size > 0
-        }
+    Intent().let {
+        it.setClassName(packageName, activityName)
+        packageManager.resolveActivity(it, 0) != null || it.resolveActivity(packageManager) != null || packageManager.queryIntentActivities(it, 0).size > 0
+    }
 
 fun Context.browse(url: String, newTask: Boolean = false): Boolean {
     return try {
@@ -97,21 +100,29 @@ fun Context.sp2px(sp: Int) = sp2px(sp.toFloat()).toInt()
 fun Context.px2dp(px: Int) = px / resources.displayMetrics.density
 fun Context.px2sp(px: Int) = px / resources.displayMetrics.scaledDensity
 
-fun Context.densityDpi() = resources.displayMetrics.densityDpi
-fun Context.density() = resources.displayMetrics.density
+val Context.densityDpi
+    get() = resources.displayMetrics.densityDpi
+val Context.density
+    get() = resources.displayMetrics.density
 
-fun Context.screenWidth() = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.width
-fun Context.screenHeight() = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.height
+val Context.screenWidth
+    get() = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.width
+val Context.screenHeight
+    get() = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.height
 
-fun Context.statusbarHieght() = resources.getDimensionPixelSize(Resources.getSystem().getIdentifier("status_bar_height", "dimen", "android"))
-fun Context.actionbarSize(): Int {
-    val ta = obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
-    val value = ta.getDimensionPixelSize(ta.getIndex(0), 0)
-    ta.recycle()
-    return value
-}
+val Context.statusbarHieght
+    get() = resources.getDimensionPixelSize(Resources.getSystem().getIdentifier("status_bar_height", "dimen", "android"))
 
-fun Context.selectableItemBackgroundResId() = TypedValue().apply { theme.resolveAttribute(R.attr.selectableItemBackground, this, true) }.resourceId
+val Context.actionbarSize: Int
+    get() {
+        val ta = obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
+        val value = ta.getDimensionPixelSize(ta.getIndex(0), 0)
+        ta.recycle()
+        return value
+    }
+
+val Context.selectableItemBackgroundResId
+    get() = TypedValue().apply { theme.resolveAttribute(R.attr.selectableItemBackground, this, true) }.resourceId
 
 fun Context.inflate(resId: Int, parent: ViewGroup? = null, attachToRoot: Boolean = false): View = LayoutInflater.from(this).inflate(resId, parent, attachToRoot)
 
@@ -125,27 +136,27 @@ fun Context.toggleSoftKeyboard() {
 
 @SuppressLint("MissingPermission")
 fun Context.makeCall(number: String): Boolean =
-        try {
-            val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$number"))
-            startActivity(intent)
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
+    try {
+        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$number"))
+        startActivity(intent)
+        true
+    } catch (e: Exception) {
+        e.printStackTrace()
+        false
+    }
 
 fun Context.share(text: String, subject: String = ""): Boolean =
-        try {
-            val intent = Intent(android.content.Intent.ACTION_SEND)
-            intent.type = "text/plain"
-            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject)
-            intent.putExtra(android.content.Intent.EXTRA_TEXT, text)
-            startActivity(Intent.createChooser(intent, null))
-            true
-        } catch (e: ActivityNotFoundException) {
-            e.printStackTrace()
-            false
-        }
+    try {
+        val intent = Intent(android.content.Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject)
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, text)
+        startActivity(Intent.createChooser(intent, null))
+        true
+    } catch (e: ActivityNotFoundException) {
+        e.printStackTrace()
+        false
+    }
 
-inline fun <reified T: Any> Context.intentFor(vararg params: Pair<String, Any?>): Intent =
-        ComInternals.createIntent(this, T::class.java, params)
+inline fun <reified T : Any> Context.intentFor(vararg params: Pair<String, Any?>): Intent =
+    ComInternals.createIntent(this, T::class.java, params)
